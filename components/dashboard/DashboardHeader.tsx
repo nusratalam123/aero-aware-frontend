@@ -1,9 +1,10 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "lucide-react";
 import axios from "axios";
+import router from "next/router";
 
 export default function DashboardHeader() {
   const [user, setUser] = useState<any>(null);
@@ -12,51 +13,56 @@ export default function DashboardHeader() {
   const [lastUpdated, setLastUpdated] = useState<string>("Just now");
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token"); // or get from cookies
-        // console.log("Token:", token);
-        const response = await axios.get("https://aero-air-backend.vercel.app/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-        setUser(response.data); // Store user data
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setUser(null); // Handle errors by resetting user state
-      }
-    };
-    
     fetchUserData();
   }, []);
 
   useEffect(() => {
-    const fetchAirQuality = async () => {
-      if (user?.data.district) {
-        try {
-          const token = localStorage.getItem("token"); // or get from cookies
-          const response = await axios.get(
-            `https://aero-air-backend.vercel.app/air-quality?location=${user.data.district}`,{
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setAqi(response.data.aqi);
-          setAqiStatus(getAqiStatus(response.data.aqi));
-          setLastUpdated("A few minutes ago");
-          console.log("Air quality data:", response.data);
-        } catch (error) {
-          console.error("Error fetching air quality data:", error);
-        }
-      }
-    };
-
-    if (user) {
-      fetchAirQuality();
+    if (user?.data?.district) {
+      fetchAirQuality(user.data.district);
     }
-  }, [user]); // Run when user data changes
+  }, [user]); // Fetch air quality when user data is available
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login"); // Redirect to login if no token
+        return;
+      }
+
+      const response = await axios.get("https://aero-air-backend.vercel.app/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("User data:", response.data);
+
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setUser(null);
+    }
+  };
+
+  const fetchAirQuality = async (district: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token found");
+
+      const response = await axios.get(
+        `https://aero-air-backend.vercel.app/air-quality?location=${district}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setAqi(response.data.aqi);
+      setAqiStatus(getAqiStatus(response.data.aqi));
+      setLastUpdated("A few minutes ago");
+    } catch (error) {
+      console.error("Error fetching air quality data:", error);
+      setAqiStatus("Unavailable");
+    }
+  };
 
   const getAqiStatus = (aqi: number) => {
     if (aqi <= 50) return "Good";
@@ -76,10 +82,10 @@ export default function DashboardHeader() {
           </div>
           <div>
             <h1 className="text-2xl font-bold">
-              Welcome back, {user?.data.firstName || "Guest"}
+              Welcome back, {user?.data?.firstName || "Guest"}
             </h1>
-            <h1 className="text-2xl font-bold">
-              Area, {user?.data.district || "Guest"}
+            <h1 className="text-lg font-medium">
+              Area: {user?.data?.district || "Unknown"}
             </h1>
             <p className="text-sky-100">Last updated: {lastUpdated}</p>
           </div>
