@@ -4,7 +4,7 @@ export default function InfoSection() {
       <div className="container mx-auto px-4 flex flex-col md:flex-row-reverse items-center">
         <div className="md:w-1/2 mb-8 md:mb-0 md:pl-8">
           <img
-            src="/placeholder.svg?height=300&width=400"
+            src="/empower.jpeg?height=300&width=400"
             alt="AeroAware Data Analysis"
             className="rounded-lg shadow-lg"
           />

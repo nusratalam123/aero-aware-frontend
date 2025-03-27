@@ -15,7 +15,7 @@ export default function Banner() {
         </div>
         <div className="md:w-1/2">
           <img
-            src="/placeholder.svg?height=300&width=400"
+            src="/Banner.jpeg?height=300&width=400"
             alt="AeroAware IoT Device"
             className="rounded-lg shadow-xl"
           />

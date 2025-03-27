@@ -3,7 +3,7 @@ export default function SolutionSection() {
     <section id="solution" className="py-20 bg-gradient-to-b from-sky-50 to-sky-100">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-8 md:mb-0">
-          <img src="/placeholder.svg?height=300&width=400" alt="AeroAware Solution" className="rounded-lg shadow-lg" />
+          <img src="/innovation.jpeg?height=300&width=400" alt="AeroAware Solution" className="rounded-lg shadow-lg" />
         </div>
         <div className="md:w-1/2 md:pl-8">
           <h2 className="text-3xl font-bold mb-4 text-sky-900">Our Innovative Solution</h2>
