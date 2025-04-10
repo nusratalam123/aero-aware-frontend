@@ -14,22 +14,24 @@ interface AuthState {
 const initialState: AuthState = { user: null };
 
 // Async thunk to fetch user from token
-export const fetchUser = createAsyncThunk<User | null>("auth/fetchUser", async () => {
-  try {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+export const fetchUser = createAsyncThunk<User | null>(
+  "auth/fetchUser",
+  async () => {
+    try {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
 
-    if (!token) return null;
+      if (!token) return null;
 
-    const decoded: User = jwt_decode.jwtDecode(token);  
-    return decoded;
-  } catch (error) {
-    console.error("Invalid token", error);
-    return null;
-  }
-});
+      const decoded: User = jwt_decode.jwtDecode(token);
+      return decoded;
+    } catch (error) {
+      return null;
+    }
+  },
+);
 
 const authSlice = createSlice({
   name: "auth",

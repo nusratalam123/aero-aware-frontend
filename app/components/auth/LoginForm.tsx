@@ -1,22 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle login logic here
-    console.log("Login:", formData)
-  }
+    e.preventDefault();
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto bg-white/80 backdrop-blur shadow-xl">
@@ -34,12 +32,17 @@ export default function LoginForm() {
               type="email"
               required
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               className="border-sky-200 focus:border-sky-400"
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-sky-900">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-sky-900"
+            >
               Password
             </label>
             <Input
@@ -47,7 +50,9 @@ export default function LoginForm() {
               type="password"
               required
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               className="border-sky-200 focus:border-sky-400"
             />
           </div>
@@ -56,13 +61,15 @@ export default function LoginForm() {
           </Button>
           <p className="text-center text-sky-800 mt-4">
             Don't have an account?{" "}
-            <Link href="/register" className="text-sky-600 hover:text-sky-700 font-medium">
+            <Link
+              href="/register"
+              className="text-sky-600 hover:text-sky-700 font-medium"
+            >
               Register here
             </Link>
           </p>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
-

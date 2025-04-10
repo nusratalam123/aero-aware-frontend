@@ -1,26 +1,48 @@
-import type { Metadata } from "next"
-import DashboardHeader from "@/components/dashboard/DashboardHeader"
-import MetricsGrid from "@/components/dashboard/MetricsGrid"
-import HistoricalChart from "@/components/dashboard/HistoricalChart"
-import ComparisonChart from "@/components/dashboard/ComparisonChart"
-import ParticleCount from "@/components/dashboard/ParticleCount"
-import AQIComparison from "@/components/dashboard/AQIComparison"
-import Chatbot from "@/components/dashboard/Chatbot"
+import type { Metadata } from "next";
+import Chatbot from "@/components/dashboard/Chatbot";
+import MetricsGrid from "@/components/dashboard/MetricsGrid";
+import AQIComparison from "@/components/dashboard/AQIComparison";
+import ParticleCount from "@/components/dashboard/ParticleCount";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import HistoricalChart from "@/components/dashboard/HistoricalChart";
+import ComparisonChart from "@/components/dashboard/ComparisonChart";
+import { cookies } from "next/headers";
+import { getUser } from "@/utils/get-user";
+import { BASE_URL } from "@/lib/data";
+import { AirQualityType } from "@/types/air-quality";
 
 export const metadata: Metadata = {
   title: "Dashboard | AeroAware",
   description: "Monitor your environmental data in real-time",
-}
+};
 
-export default function DashboardPage() {
+const getAirQuality = async () => {
+  const token = cookies().get("token")?.value;
+  const user = await getUser();
+
+  const res = await fetch(
+    `${BASE_URL}/air-quality?location=${user?.district}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      next: { revalidate: 120 },
+    },
+  );
+  const data = await res.json();
+  return data as AirQualityType;
+};
+
+export default async function DashboardPage() {
+  const user = await getUser();
+  const airQuality = await getAirQuality();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-sky-100 to-sky-50">
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-6">
-          <DashboardHeader />
+          <DashboardHeader user={user} airQuality={airQuality} />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              <MetricsGrid />
+              <MetricsGrid airQuality={airQuality} />
               <HistoricalChart />
               <div className="grid md:grid-cols-2 gap-6">
                 <ParticleCount />
@@ -35,6 +57,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
