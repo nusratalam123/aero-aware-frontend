@@ -1,11 +1,10 @@
 import Link from "next/link";
 import Logout from "./Logout";
-import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { getUser } from "@/utils/get-user";
 
 export default async function Header() {
-  const user: any = await getUser();
+  const user = await getUser();
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -43,9 +42,7 @@ export default async function Header() {
         <div className="flex space-x-4 items-center">
           {user ? (
             <>
-              <span className="text-gray-600 font-bold">
-                {user.data.firstName}
-              </span>
+              <span className="text-gray-600 font-bold">{user.firstName}</span>
               <Logout />
             </>
           ) : (

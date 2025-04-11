@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Chatbot from "@/components/dashboard/Chatbot";
-import MetricsGrid from "@/components/dashboard/MetricsGrid";
-import AQIComparison from "@/components/dashboard/AQIComparison";
-import ParticleCount from "@/components/dashboard/ParticleCount";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import HistoricalChart from "@/components/dashboard/HistoricalChart";
-import ComparisonChart from "@/components/dashboard/ComparisonChart";
+import { BASE_URL } from "@/lib/data";
 import { cookies } from "next/headers";
 import { getUser } from "@/utils/get-user";
-import { BASE_URL } from "@/lib/data";
 import { AirQualityType } from "@/types/air-quality";
+import Chatbot from "@/components/dashboard/Chatbot";
+import MetricsGrid from "@/components/dashboard/MetricsGrid";
+import ParticleCount from "@/components/dashboard/ParticleCount";
+import AQIComparison from "@/components/dashboard/AQIComparison";
+import HistoricalChart from "@/components/dashboard/HistoricalChart";
+import ComparisonChart from "@/components/dashboard/ComparisonChart";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export const metadata: Metadata = {
   title: "Dashboard | AeroAware",

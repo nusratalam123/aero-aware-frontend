@@ -21,7 +21,7 @@ export const getUser = async () => {
     );
 
     const data = await response.json();
-    return data as UserType;
+    return data.data as UserType;
   } catch (err: any) {
     return null;
   }

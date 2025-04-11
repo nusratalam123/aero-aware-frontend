@@ -33,7 +33,10 @@ export default async function DashboardHeader({
             <h1 className="text-lg font-medium">
               Area: {user?.district || "Unknown"}
             </h1>
-            <p className="text-sky-100">Last updated: {airQuality.updatedAt}</p>
+            <p className="text-sky-100">
+              Last updated:{" "}
+              {new Date(airQuality.updatedAt).toLocaleDateString()}
+            </p>
           </div>
         </div>
         <div className="text-right">
