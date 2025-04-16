@@ -1,4 +1,4 @@
-import { UserType } from "@/types/user";
+import { UserType } from "@/app/types/user";
 import { cookies } from "next/headers";
 
 export const getUser = async () => {
