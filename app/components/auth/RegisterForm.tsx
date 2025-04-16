@@ -1,9 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -11,18 +7,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
 import Link from "next/link";
+import { useState, useTransition } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BASE_URL } from "@/lib/data";
+import { useRouter } from "next/navigation";
 
 const districts = [
-  "District 1",
-  "District 2",
-  "District 3",
-  "District 4",
-  "District 5",
+  "Barishal",
+  "Chittagong",
+  "Dhaka",
+  "Khulna",
+  "Mymensingh",
+  "Rajshahi",
+  "Rangpur",
+  "Sylhet",
 ];
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  country: string;
+  district: string;
+  mobileNumber: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export default function RegisterForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     address: "",
@@ -34,9 +52,44 @@ export default function RegisterForm() {
     confirmPassword: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const { replace } = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle registration logic here
+    setError("");
+    setSuccess("");
+
+    // ✅ Password validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        await axios.post(`${BASE_URL}/auth/signup`, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          address: formData.address,
+          email: formData.email,
+          country: formData.country,
+          district: formData.district,
+          mobileNumber: formData.mobileNumber,
+          password: formData.password,
+        });
+
+        setSuccess("Registration successful! Redirecting...");
+        replace("/login");
+      } catch (err: any) {
+        setError(
+          err.response?.data?.message ||
+            "Registration failed. Please try again.",
+        );
+      }
+    });
   };
 
   return (
@@ -213,9 +266,18 @@ export default function RegisterForm() {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full bg-sky-600 hover:bg-sky-700">
-            Register
+
+          {error && <p className="text-red-600 text-center">{error}</p>}
+          {success && <p className="text-green-600 text-center">{success}</p>}
+
+          <Button
+            type="submit"
+            className="w-full bg-sky-600 hover:bg-sky-700"
+            disabled={isPending}
+          >
+            {isPending ? "Registering..." : "Register"}
           </Button>
+
           <p className="text-center text-sky-800 mt-4">
             Already have an account?{" "}
             <Link
